@@ -1,6 +1,6 @@
 {
   "name": "@machinomy/hdwallet-provider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HD Wallet-enabled Web3 provider",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,13 +22,13 @@
     "web3-provider-engine": "^14.0.5"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.0",
     "@machinomy/types-eth-hd-keyring": "^0.0.1",
     "@machinomy/types-ethereumjs-tx": "^0.0.10",
     "@machinomy/types-ethereumjs-wallet": "^0.0.12",
     "@machinomy/types-web3": "^0.0.7",
     "@machinomy/types-web3-provider-engine": "^0.0.4",
     "@types/bip39": "^2.4.0",
+    "@types/mocha": "^5.2.0",
     "ganache-core": "^2.1.0",
     "mocha": "^5.1.1",
     "tslint": "^5.10.0",
