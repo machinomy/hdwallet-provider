@@ -6,9 +6,9 @@ import * as HookedWalletSubprovider from 'web3-provider-engine/subproviders/hook
 import * as ProviderSubprovider from 'web3-provider-engine/subproviders/provider'
 import * as HDKeyring from 'eth-hd-keyring'
 
-export default class HDWalletProvider {
-  send: (payload: any) => any;
-  sendAsync: (payload: any, callback: (error: any, response: any) => void) => void;
+export default class HDWalletProvider implements Web3.Provider {
+  send: (payload: any) => any
+  sendAsync: (payload: any, callback: (error: any, response: any) => void) => void
   keyring: HDKeyring
   engine: ProviderEngine
 
@@ -28,25 +28,32 @@ export default class HDWalletProvider {
           callback(error)
         })
       },
-      signTransaction: (txParams: Web3.TxData, callback: HookedWalletSubprovider.Callback<Transaction>) => {
+      signTransaction: (txParams: Web3.TxData, callback: HookedWalletSubprovider.Callback<string>) => {
         let tx = new Transaction(txParams)
         keyring.signTransaction(txParams.from, tx).then(signedTx => {
-          callback(null, signedTx)
+          let hexTx = '0x' + signedTx.serialize().toString('hex')
+          callback(null, hexTx)
         }).catch(error => {
           callback(error)
         })
       },
       signMessage: (msgParams: HookedWalletSubprovider.MsgParams, callback: HookedWalletSubprovider.Callback<string>) => {
-        let address = msgParams.from;
-        return keyring.signPersonalMessage(address, msgParams.data);
+        let address = msgParams.from
+        keyring.signPersonalMessage(address, msgParams.data).then(result => {
+          callback(null, result)
+        }).catch(callback)
       },
       signPersonalMessage: (msgParams: HookedWalletSubprovider.MsgParams, callback: HookedWalletSubprovider.Callback<string>) => {
-        let address = msgParams.from;
-        return keyring.signPersonalMessage(address, msgParams.data);
+        let address = msgParams.from
+        keyring.signPersonalMessage(address, msgParams.data).then(result => {
+          callback(null, result)
+        }).catch(callback)
       },
       signTypedMessage: (msgParams: HookedWalletSubprovider.TypedMsgParams, callback: HookedWalletSubprovider.Callback<string>) => {
-        let address = msgParams.from;
-        return keyring.signTypedData(address, msgParams.data);
+        let address = msgParams.from
+        keyring.signTypedData(address, msgParams.data).then(result => {
+          callback(null, result)
+        }).catch(callback)
       }
     }))
     this.engine.addProvider(new FiltersSubprovider())

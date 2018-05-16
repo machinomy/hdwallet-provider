@@ -22,14 +22,17 @@ describe('HD Wallet Provider', () => {
     setTimeout(() => server.close(done), 1000) // :/
   })
 
-  it('provides', function(done){
+  it('provides', done => {
     provider = new HDWalletProvider(MNEMONIC, `http://localhost:${PORT}`)
     web3.setProvider(provider)
 
-    web3.eth.getBlockNumber((err, number) => {
-      assert(number === 0)
-      done()
+    web3.eth.getBlockNumber((err, n) => {
+      if (err) {
+        done(err)
+      } else {
+        assert(n === 0)
+        done()
+      }
     })
   })
 })
-

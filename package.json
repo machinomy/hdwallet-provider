@@ -23,10 +23,10 @@
   },
   "devDependencies": {
     "@machinomy/types-eth-hd-keyring": "^0.0.1",
-    "@machinomy/types-ethereumjs-tx": "^0.0.10",
+    "@machinomy/types-ethereumjs-tx": "^0.1.0",
     "@machinomy/types-ethereumjs-wallet": "^0.0.12",
     "@machinomy/types-web3": "^0.0.7",
-    "@machinomy/types-web3-provider-engine": "^0.0.4",
+    "@machinomy/types-web3-provider-engine": "^0.0.5",
     "@types/bip39": "^2.4.0",
     "@types/mocha": "^5.2.0",
     "ganache-core": "^2.1.0",

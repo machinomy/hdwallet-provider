@@ -22,6 +22,13 @@
   dependencies:
     safe-buffer "^5.1.2"
 
+"@machinomy/types-ethereumjs-tx@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@machinomy/types-ethereumjs-tx/-/types-ethereumjs-tx-0.1.0.tgz#c4cf53422313eafc34c80a9f80744e872400a5db"
+  dependencies:
+    "@types/bignumber.js" "^4.0.2"
+    safe-buffer "^5.1.2"
+
 "@machinomy/types-ethereumjs-wallet@^0.0.12":
   version "0.0.12"
   resolved "https://registry.yarnpkg.com/@machinomy/types-ethereumjs-wallet/-/types-ethereumjs-wallet-0.0.12.tgz#6512c287d2b7662bb3562a8c755e6b3bc5e13711"
@@ -29,9 +36,9 @@
     ethereumjs-wallet "^0.6.0"
     safe-buffer "^5.1.2"
 
-"@machinomy/types-web3-provider-engine@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@machinomy/types-web3-provider-engine/-/types-web3-provider-engine-0.0.4.tgz#8c842ef9afb81cfb9ffdd97e4551cee998cbe19a"
+"@machinomy/types-web3-provider-engine@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@machinomy/types-web3-provider-engine/-/types-web3-provider-engine-0.0.5.tgz#52bce8f0ca69663ec45c15ec3fcfcf2587cd5c4a"
   dependencies:
     "@machinomy/types-ethereumjs-tx" "^0.0.10"
     "@machinomy/types-web3" "^0.0.7"
