@@ -2,6 +2,7 @@ import * as Ganache from 'ganache-core'
 import * as assert from 'assert'
 import * as Web3 from 'web3'
 import HDWalletProvider from './'
+import {error} from "util";
 
 const MNEMONIC = 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 const PORT = 8646
@@ -14,7 +15,11 @@ describe('HD Wallet Provider', () => {
 
   before(done => {
     server = Ganache.server()
-    server.listen(PORT, done)
+    server.listen(PORT, () => {
+      provider = new HDWalletProvider(MNEMONIC, `http://localhost:${PORT}`)
+      web3.setProvider(provider)
+      done()
+    })
   })
 
   after(done => {
@@ -22,10 +27,7 @@ describe('HD Wallet Provider', () => {
     setTimeout(() => server.close(done), 1000) // :/
   })
 
-  it('provides', done => {
-    provider = new HDWalletProvider(MNEMONIC, `http://localhost:${PORT}`)
-    web3.setProvider(provider)
-
+  it('provide block number', done => {
     web3.eth.getBlockNumber((err, n) => {
       if (err) {
         done(err)
@@ -33,6 +35,20 @@ describe('HD Wallet Provider', () => {
         assert(n === 0)
         done()
       }
+    })
+  })
+
+  it('provide accounts', async () => {
+    let expected = await provider.getAddresses()
+    return new Promise((resolve, reject) => {
+      web3.eth.getAccounts((error, actual) => {
+        if (error) {
+          reject(error)
+        } else {
+          assert.deepStrictEqual(expected, actual)
+          resolve()
+        }
+      })
     })
   })
 })
