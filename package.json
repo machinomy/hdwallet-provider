@@ -1,5 +1,5 @@
 {
-  "name": "hdwallet-provider",
+  "name": "@machinomy/hdwallet-provider",
   "version": "1.0.0",
   "description": "HD Wallet-enabled Web3 provider",
   "main": "dist/index.js",
@@ -11,6 +11,9 @@
     "prepublish": "yarn build --outDir dist/",
     "test": "yarn build && mocha src/**/*.test.js"
   },
+  "files": [
+    "dist/"
+  ],
   "dependencies": {
     "bip39": "^2.5.0",
     "eth-hd-keyring": "^1.2.2",
