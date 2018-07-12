@@ -72,18 +72,4 @@ export default class HDWalletProvider implements Web3.Provider {
   async getAddresses (): Promise<Array<string>> {
     return this.keyring.getAccounts()
   }
-
-  isConnected (): boolean {
-    try {
-      this.send({
-        id: 9999999999,
-        jsonrpc: '2.0',
-        method: 'net_listening',
-        params: []
-      })
-      return true
-    } catch (e) {
-      return false
-    }
-  }
 }
