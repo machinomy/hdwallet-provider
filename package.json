@@ -1,6 +1,6 @@
 {
   "name": "@machinomy/hdwallet-provider",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "HD Wallet-enabled Web3 provider",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
