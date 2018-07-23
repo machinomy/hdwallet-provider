@@ -12,7 +12,14 @@ export default class HDWalletProvider implements Web3.Provider {
   keyring: HDKeyring
   engine: ProviderEngine
 
-  constructor (mnemonic: string, providerUrl: string, numberOfAccounts: number = 1) {
+  /**
+   * Initialize HDWallet using some sort of provider.
+   *
+   * @param {string} mnemonic
+   * @param {Web3.Provider} provider
+   * @param {number} numberOfAccounts
+   */
+  constructor (mnemonic: string, provider: Web3.Provider, numberOfAccounts: number = 1) {
     let keyring = new HDKeyring({
       mnemonic: mnemonic,
       numberOfAccounts: numberOfAccounts
@@ -57,7 +64,7 @@ export default class HDWalletProvider implements Web3.Provider {
       }
     }))
     this.engine.addProvider(new FiltersSubprovider())
-    this.engine.addProvider(new ProviderSubprovider(new Web3.providers.HttpProvider(providerUrl)))
+    this.engine.addProvider(new ProviderSubprovider(provider))
     this.engine.start()
 
     this.sendAsync = this.engine.sendAsync.bind(this.engine)
