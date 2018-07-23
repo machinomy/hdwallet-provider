@@ -16,7 +16,7 @@ describe('HD Wallet Provider', () => {
   before(done => {
     server = Ganache.server()
     server.listen(PORT, () => {
-      provider = new HDWalletProvider(MNEMONIC, `http://localhost:${PORT}`)
+      provider = new HDWalletProvider(MNEMONIC, new Web3.providers.HttpProvider(`http://localhost:${PORT}`))
       web3.setProvider(provider)
       done()
     })
