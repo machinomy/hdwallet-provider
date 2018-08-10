@@ -6,6 +6,8 @@ import * as HookedWalletSubprovider from 'web3-provider-engine/subproviders/hook
 import * as ProviderSubprovider from 'web3-provider-engine/subproviders/provider'
 import * as HDKeyring from 'eth-hd-keyring'
 
+type Callback<A> = HookedWalletSubprovider.Callback<A>
+
 export default class HDWalletProvider implements Web3.Provider {
   send: (payload: any) => any
   sendAsync: (payload: any, callback: (error: any, response: any) => void) => void
@@ -14,10 +16,6 @@ export default class HDWalletProvider implements Web3.Provider {
 
   /**
    * Initialize HDWallet using some sort of provider.
-   *
-   * @param {string} mnemonic
-   * @param {Web3.Provider} provider
-   * @param {number} numberOfAccounts
    */
   constructor (mnemonic: string, provider: Web3.Provider, numberOfAccounts: number = 1) {
     let keyring = new HDKeyring({
@@ -28,39 +26,50 @@ export default class HDWalletProvider implements Web3.Provider {
 
     this.engine = new ProviderEngine()
     this.engine.addProvider(new HookedWalletSubprovider({
-      getAccounts: (callback: HookedWalletSubprovider.Callback<Array<string>>) => {
-        keyring.getAccounts().then(accounts => {
+      getAccounts: async (callback: Callback<Array<string>>) => {
+        try {
+          let accounts = await keyring.getAccounts()
           callback(null, accounts)
-        }).catch(error => {
-          callback(error)
-        })
+        } catch (e) {
+          callback(e)
+        }
       },
-      signTransaction: (txParams: Web3.TxData, callback: HookedWalletSubprovider.Callback<string>) => {
-        let tx = new Transaction(txParams)
-        keyring.signTransaction(txParams.from, tx).then(signedTx => {
+      signTransaction: async (txParams: Web3.TxData, callback: Callback<string>) => {
+        try {
+          let tx = new Transaction(txParams)
+          let signedTx = await keyring.signTransaction(txParams.from, tx)
           let hexTx = '0x' + signedTx.serialize().toString('hex')
           callback(null, hexTx)
-        }).catch(error => {
-          callback(error)
-        })
+        } catch (e) {
+          callback(e)
+        }
       },
-      signMessage: (msgParams: HookedWalletSubprovider.MsgParams, callback: HookedWalletSubprovider.Callback<string>) => {
-        let address = msgParams.from
-        keyring.signPersonalMessage(address, msgParams.data).then(result => {
+      signMessage: async (msgParams: HookedWalletSubprovider.MsgParams, callback: Callback<string>) => {
+        try {
+          let address = msgParams.from
+          let result = await keyring.signPersonalMessage(address, msgParams.data)
           callback(null, result)
-        }).catch(callback)
+        } catch (e) {
+          callback(e)
+        }
       },
-      signPersonalMessage: (msgParams: HookedWalletSubprovider.MsgParams, callback: HookedWalletSubprovider.Callback<string>) => {
-        let address = msgParams.from
-        keyring.signPersonalMessage(address, msgParams.data).then(result => {
+      signPersonalMessage: async (msgParams: HookedWalletSubprovider.MsgParams, callback: Callback<string>) => {
+        try {
+          let address = msgParams.from
+          let result = await keyring.signPersonalMessage(address, msgParams.data)
           callback(null, result)
-        }).catch(callback)
+        } catch (e) {
+          callback(e)
+        }
       },
-      signTypedMessage: (msgParams: HookedWalletSubprovider.TypedMsgParams, callback: HookedWalletSubprovider.Callback<string>) => {
-        let address = msgParams.from
-        keyring.signTypedData(address, msgParams.data).then(result => {
+      signTypedMessage: async (msgParams: HookedWalletSubprovider.TypedMsgParams, callback: Callback<string>) => {
+        try {
+          let address = msgParams.from
+          let result = await keyring.signTypedData(address, msgParams.data)
           callback(null, result)
-        }).catch(callback)
+        } catch (e) {
+          callback(e)
+        }
       }
     }))
     this.engine.addProvider(new FiltersSubprovider())

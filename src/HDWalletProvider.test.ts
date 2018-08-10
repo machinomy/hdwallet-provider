@@ -2,7 +2,6 @@ import * as Ganache from 'ganache-core'
 import * as assert from 'assert'
 import * as Web3 from 'web3'
 import HDWalletProvider from './'
-import {error} from "util";
 
 const MNEMONIC = 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 const PORT = 8646
