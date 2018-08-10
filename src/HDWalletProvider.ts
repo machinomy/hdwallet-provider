@@ -80,6 +80,11 @@ export default class HDWalletProvider implements Web3.Provider {
     this.send = this.engine.send.bind(this.engine)
   }
 
+  static http (mnemonic: string, url: string, numberOfAccounts: number = 1): HDWalletProvider {
+    let provider = new Web3.providers.HttpProvider(url)
+    return new HDWalletProvider(mnemonic, provider, numberOfAccounts)
+  }
+
   async getAddress (n: number): Promise<string> {
     let accounts = await this.keyring.getAccounts()
     return accounts[n]
