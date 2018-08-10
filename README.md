@@ -13,17 +13,19 @@ Fork of [truffle-hdwallet-provider](https://github.com/trufflesuite/truffle-hdwa
 
 You can use this provider wherever a Web3 provider is needed.
 
-    import HDWalletProvider from '@machinomy/hdwallet-provider'
-    import * as Web3 from 'web3'
+```typescript
+import HDWalletProvider from '@machinomy/hdwallet-provider'
+import * as Web3 from 'web3'
     
-    const mnemonic = "opinion destroy betray ..." // 12 word mnemonic
-    
-    // simple http
-    var justProvider = HDWalletProvider.http(mnemonic, 'http://localhost:8545')
-    
-    // or something more complex
-    var customDumbProvider = new Web3.providers.HttpProvider('http://localhost:8545')
-    var provider = new HDWalletProvider(mnemonic, customDumbProvider, 5)
+const mnemonic = "opinion destroy betray ..." // 12 word mnemonic
+
+// simple http
+var justProvider = HDWalletProvider.http(mnemonic, 'http://localhost:8545')
+
+// or something more complex
+var customDumbProvider = new Web3.providers.HttpProvider('http://localhost:8545')
+var provider = new HDWalletProvider(mnemonic, customDumbProvider, 5)
+```
 
 By default, the HDWalletProvider will use the address of the first address that's generated from the mnemonic. If you pass in a specific index, it'll use that address instead. Currently, the HDWalletProvider manages only one address at a time, but it can be easily upgraded to manage (i.e., "unlock") multiple addresses.
 
