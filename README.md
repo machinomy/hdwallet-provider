@@ -1,7 +1,9 @@
 # hdwallet-provider
 
 HD Wallet-enabled Web3 provider. Use it to sign transactions,
-and messages for addresses derived from a 12-word mnemonic. Fork of [truffle-hdwallet-provider](https://github.com/trufflesuite/truffle-hdwallet-provider).
+and messages for addresses derived from a 12-word mnemonic.
+
+Fork of [truffle-hdwallet-provider](https://github.com/trufflesuite/truffle-hdwallet-provider).
 
 ## Install
 
