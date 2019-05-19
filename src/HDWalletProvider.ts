@@ -17,10 +17,11 @@ export default class HDWalletProvider implements Web3.Provider {
   /**
    * Initialize HDWallet using some sort of provider.
    */
-  constructor (mnemonic: string, provider: Web3.Provider, numberOfAccounts: number = 1) {
+  constructor (mnemonic: string, provider: Web3.Provider, hdPath?: string, numberOfAccounts: number = 1) {
     let keyring = new HDKeyring({
-      mnemonic: mnemonic,
-      numberOfAccounts: numberOfAccounts
+      hdPath,
+      mnemonic,
+      numberOfAccounts
     })
     this.keyring = keyring
 
@@ -75,9 +76,9 @@ export default class HDWalletProvider implements Web3.Provider {
     this.send = this.engine.send.bind(this.engine)
   }
 
-  static http (mnemonic: string, url: string, numberOfAccounts: number = 1): HDWalletProvider {
+  static http (mnemonic: string, url: string, hdPath?: string, numberOfAccounts: number = 1): HDWalletProvider {
     let provider = new Web3.providers.HttpProvider(url)
-    return new HDWalletProvider(mnemonic, provider, numberOfAccounts)
+    return new HDWalletProvider(mnemonic, provider, hdPath, numberOfAccounts)
   }
 
   async getAddress (n: number): Promise<string> {
