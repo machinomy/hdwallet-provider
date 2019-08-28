@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import HDWalletProvider from './';
 import BigNumber from 'bignumber.js'
 
-const MNEMONIC = 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat';
+const MNEMONIC = 'toy junior around syrup kiwi vast echo joke cross vote animal soup';
 const PORT = 8646;
 
 const web3 = new Web3();
@@ -46,7 +46,7 @@ describe('HD Wallet Provider', () => {
   it('sign message', async () => {
     const account = (await web3.eth.getAccounts())[0]
     const signature = await web3.eth.sign('0xdeadbeaf', account)
-    assert.strictEqual(signature, '0x3625102379ad3db8521240fa82e1f8829b41acc6e826f92f082476e60432510351d88072116c2e1304130871e8bd1a6ef9d5f8751d6a6d030e0e390a65e28b061c')
+    assert.strictEqual(signature, '0xb9d7007683c71806dd0341c66b0392ef6294233fdc4ebb1c05069db9d513873f4cc47fdb28c50fe194f1f623731d75c457108e8882ee2a153f8f5bcef564fe231c')
   })
 
   it('sign transaction', async () => {
@@ -59,15 +59,11 @@ describe('HD Wallet Provider', () => {
     })
     const balanceAfter = new BigNumber(await web3.eth.getBalance(account))
     assert.strictEqual(balanceAfter.minus(balance).toNumber(), -42000000000010)
-    // const signature = await web3.eth.sendTransaction({
-    //   value
-    // })
-    // assert.strictEqual(signature, '0x3625102379ad3db8521240fa82e1f8829b41acc6e826f92f082476e60432510351d88072116c2e1304130871e8bd1a6ef9d5f8751d6a6d030e0e390a65e28b061c')
   })
 
   it('provide accounts', async () => {
-    const expected = await provider.getAddresses()
     const actual = await web3.eth.getAccounts()
-    assert.deepStrictEqual(expected, actual.map(a => a.toLowerCase()))
+    const expected = ['0x26D1b581c536217f7B58E5c5D34959d99d017Be6', '0xD9DB3d0DB7413820AFc11FFb0E27f8a113dddDE7']
+    assert.deepStrictEqual(expected, actual)
   });
 });
