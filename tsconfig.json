@@ -9,11 +9,14 @@
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "experimentalDecorators": true
+    "declarationMap": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "outDir": "dist/",
+    "rootDir": "src/"
   },
   "include": [
-    "src/globals.d.ts",
-    "src/*.ts",
-    "node_modules/**/index.d.ts"
+    "src/types/*.d.ts",
+    "src/*.ts"
   ]
 }

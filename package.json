@@ -10,30 +10,30 @@
     "clean": "rm -rf dist/",
     "lint": "tslint --format stylish --project . --exclude './node_modules/**/*.ts'",
     "prepublish": "yarn build --outDir dist/",
-    "test": "yarn build && mocha src/**/*.test.js"
+    "test": "yarn build && mocha dist/**/*.test.js"
   },
   "files": [
     "dist/"
   ],
   "dependencies": {
-    "bip39": "^2.5.0",
-    "eth-hd-keyring": "^1.2.2",
-    "ethereumjs-tx": "^1.3.4",
-    "web3-provider-engine": "^14.0.5"
+    "bip39": "^3.0.2",
+    "eth-hd-keyring": "^2.0.0",
+    "ethereumjs-tx": "^2.1.0",
+    "ethereumjs-util": "^6.1.0",
+    "web3-provider-engine": "^15.0.3"
   },
   "devDependencies": {
-    "@machinomy/types-eth-hd-keyring": "^0.0.1",
-    "@machinomy/types-ethereumjs-tx": "^0.1.0",
-    "@machinomy/types-ethereumjs-wallet": "^0.0.12",
-    "@machinomy/types-web3": "^0.0.7",
-    "@machinomy/types-web3-provider-engine": "^0.0.5",
-    "@types/bip39": "^2.4.0",
-    "@types/mocha": "^5.2.0",
-    "ganache-core": "^2.1.0",
-    "mocha": "^5.1.1",
-    "tslint": "^5.10.0",
-    "tslint-config-standard": "^7.0.0",
-    "typescript": "^2.8.3",
-    "web3": "^0.20"
+    "@types/bip39": "^2.4.2",
+    "@types/lodash": "^4.14.138",
+    "@types/mocha": "^5.2.7",
+    "@types/web3": "^1.0.19",
+    "bignumber.js": "^9.0.0",
+    "ganache-core": "^2.7.0",
+    "lodash": "^4.17.15",
+    "mocha": "^6.2.0",
+    "prettier": "^1.18.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3",
+    "web3": "^1.2.1"
   }
 }
