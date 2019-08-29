@@ -17,7 +17,8 @@ describe('HD Wallet Provider', () => {
   before(done => {
     server = Ganache.server({
       port: PORT,
-      mnemonic: MNEMONIC
+      mnemonic: MNEMONIC,
+      network_id: 4
     });
     server.listen(PORT, async () => {
       provider = new HDWalletProvider({

@@ -16,13 +16,19 @@
     "dist/"
   ],
   "dependencies": {
+    "async": "^3.1.0",
     "bip39": "^3.0.2",
+    "cross-fetch": "^3.0.4",
+    "eth-block-tracker": "^4.4.2",
     "eth-hd-keyring": "^2.0.0",
     "ethereumjs-tx": "^2.1.0",
     "ethereumjs-util": "^6.1.0",
-    "web3-provider-engine": "^15.0.3"
+    "json-rpc-error": "^2.0.0",
+    "promise-to-callback": "^1.0.0",
+    "web3-provider-engine": "^13.8.0"
   },
   "devDependencies": {
+    "@types/async": "^3.0.1",
     "@types/bip39": "^2.4.2",
     "@types/lodash": "^4.14.138",
     "@types/mocha": "^5.2.7",
