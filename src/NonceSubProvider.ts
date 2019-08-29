@@ -39,7 +39,7 @@ export class NonceSubProvider extends SubProvider {
           if (err) return cb()
           // parse raw tx
           const rawTx = ethUtil.toBuffer(payload.params[0])
-          const tx = new Transaction(rawTx, { chain: 'rinkeby' })
+          const tx = new Transaction(rawTx)
           // extract address
           const address = ethUtil.bufferToHex(tx.getSenderAddress())
           // extract nonce and increment
