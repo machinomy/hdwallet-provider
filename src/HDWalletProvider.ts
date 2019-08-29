@@ -122,4 +122,8 @@ export default class HDWalletProvider implements Provider {
   send(payload: JsonRPCRequest, callback: Callback<JsonRPCResponse>): void {
     this.engine.sendAsync(payload, callback)
   }
+
+  sendAsync(payload: JsonRPCRequest, callback: Callback<JsonRPCResponse>): void {
+    this.engine.sendAsync(payload, callback)
+  }
 }
