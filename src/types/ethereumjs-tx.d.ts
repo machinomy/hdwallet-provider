@@ -2,7 +2,7 @@ declare module 'ethereumjs-tx' {
   import BigNumber from 'bignumber.js'
 
   export class Transaction {
-    constructor (raw: Buffer | Transaction.TransactionProperties)
+    constructor (raw: Buffer | Transaction.TransactionProperties, options?: object)
     sign(privateKey: Buffer): void
     serialize(): Buffer
     getSenderAddress(): Buffer

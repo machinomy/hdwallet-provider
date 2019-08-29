@@ -100,7 +100,12 @@ export default class HDWalletProvider implements Provider {
         })
       },
       signTransaction: (txParams: any, callback: Callback<string>) => {
-        let tx = new Transaction(txParams)
+        let tx
+        if (options.rpcUrl.includes('rinkeby')) {
+          tx = new Transaction(txParams, { chain: 'rinkeby' })
+        } else {
+          tx = new Transaction(txParams)
+        }
         keyring.signTransaction(txParams.from, tx).then(signedTx => {
           let hexTx = '0x' + signedTx.serialize().toString('hex')
           callback(null, hexTx)
