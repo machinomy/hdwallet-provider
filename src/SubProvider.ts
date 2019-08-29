@@ -1,5 +1,5 @@
-import ProviderEngine from 'web3-provider-engine'
 import * as util from "./util";
+import ProviderEngine from 'web3-provider-engine';
 
 export abstract class SubProvider {
   engine?: ProviderEngine

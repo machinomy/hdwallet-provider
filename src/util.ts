@@ -1,5 +1,5 @@
-import FetchSubprovider from 'web3-provider-engine/subproviders/fetch';
-import WebSocketSubprovider from 'web3-provider-engine/subproviders/websocket';
+import * as ethUtil from 'ethereumjs-util'
+import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
 
 const EXTRA_DIGITS = 3;
 
@@ -29,9 +29,9 @@ export function baseProvider(rpcUrl: string) {
     case 'https':
       return new FetchSubprovider({ rpcUrl });
     case 'ws':
-      return new WebSocketSubprovider({ rpcUrl });
+      throw new Error(`ProviderEngine - unrecognized protocol in "${rpcUrl}"`);
     case 'wss':
-      return new WebSocketSubprovider({ rpcUrl });
+      throw new Error(`ProviderEngine - unrecognized protocol in "${rpcUrl}"`);
     default:
       throw new Error(`ProviderEngine - unrecognized protocol in "${rpcUrl}"`);
   }
@@ -66,5 +66,76 @@ export function blockTagParamIndex(payload: any): number | undefined {
     // there is no blockTag
     default:
       return undefined;
+  }
+}
+
+export function toBufferBlock (jsonBlock: any) {
+  return {
+    number:           ethUtil.toBuffer(jsonBlock.number),
+    hash:             ethUtil.toBuffer(jsonBlock.hash),
+    parentHash:       ethUtil.toBuffer(jsonBlock.parentHash),
+    nonce:            ethUtil.toBuffer(jsonBlock.nonce),
+    mixHash:          ethUtil.toBuffer(jsonBlock.mixHash),
+    sha3Uncles:       ethUtil.toBuffer(jsonBlock.sha3Uncles),
+    logsBloom:        ethUtil.toBuffer(jsonBlock.logsBloom),
+    transactionsRoot: ethUtil.toBuffer(jsonBlock.transactionsRoot),
+    stateRoot:        ethUtil.toBuffer(jsonBlock.stateRoot),
+    receiptsRoot:     ethUtil.toBuffer(jsonBlock.receiptRoot || jsonBlock.receiptsRoot),
+    miner:            ethUtil.toBuffer(jsonBlock.miner),
+    difficulty:       ethUtil.toBuffer(jsonBlock.difficulty),
+    totalDifficulty:  ethUtil.toBuffer(jsonBlock.totalDifficulty),
+    size:             ethUtil.toBuffer(jsonBlock.size),
+    extraData:        ethUtil.toBuffer(jsonBlock.extraData),
+    gasLimit:         ethUtil.toBuffer(jsonBlock.gasLimit),
+    gasUsed:          ethUtil.toBuffer(jsonBlock.gasUsed),
+    timestamp:        ethUtil.toBuffer(jsonBlock.timestamp),
+    transactions:     jsonBlock.transactions,
+  }
+}
+
+export function isFn(input: any): boolean {
+  const type = Object.prototype.toString.call(input);
+  return type === '[object Function]' ||
+    type === '[object GeneratorFunction]' ||
+    type === '[object AsyncFunction]';
+}
+
+export function promiseToCallback(promise: Promise<any>) {
+  if (!isFn(promise.then)) {
+    throw new TypeError('Expected a promise');
+  }
+
+  return function (cb: any) {
+    promise.then(function (data) {
+      setImmediate(cb, null, data);
+    }, function (err) {
+      setImmediate(cb, err);
+    });
+  };
+}
+
+export interface RetryOptions {
+  times: number,
+  interval: number,
+  errorFilter: (err: any) => boolean,
+}
+
+export async function delay(n: number) {
+  return new Promise<void>(resolve => {
+    setTimeout(resolve, n)
+  })
+}
+
+export async function retry<A>(options: RetryOptions, task: () => Promise<A>): Promise<A> {
+  try {
+    return task()
+  } catch (e) {
+    if (options.errorFilter(e) && options.times > 0) {
+      await delay(options.interval)
+      const nextOptions = { ...options, times: options.times - 1 }
+      return await retry(nextOptions, task)
+    } else {
+      throw e
+    }
   }
 }
