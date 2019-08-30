@@ -6,6 +6,16 @@ import { Transaction } from "ethereumjs-tx";
 export class NonceSubProvider extends SubProvider {
   private nonceCache: Map<string, number> = new Map()
 
+  updateNonce(address: string, nonce: number, cb: () => void) {
+    const cached = this.nonceCache.get(address)
+    const isNewerNonce = (typeof cached === 'number') && nonce > cached
+    if (!cached || isNewerNonce) {
+      console.log(`NONCE: for address ${address}: before=${cached}, after=${nonce}`)
+      this.nonceCache.set(address, nonce)
+    }
+    cb()
+  }
+
   handleRequest(payload: any, next: any, end: any): void {
     switch(payload.method) {
       case 'eth_getTransactionCount':
@@ -21,10 +31,9 @@ export class NonceSubProvider extends SubProvider {
           } else {
             next((err: any, result: any, cb: any) => {
               if (err) return cb()
-              if (!this.nonceCache.get(address)) {
-                this.nonceCache.set(address, result)
-              }
-              cb()
+              this.updateNonce(address, ethUtil.bufferToInt(result), () => {
+                cb()
+              })
             })
           }
         } else {
@@ -47,8 +56,9 @@ export class NonceSubProvider extends SubProvider {
           nonce++
           // dont update our record on the nonce until the submit was successful
           // update cache
-          this.nonceCache.set(address, nonce)
-          cb()
+          this.updateNonce(address, nonce, () => {
+            cb()
+          })
         })
         return
 
