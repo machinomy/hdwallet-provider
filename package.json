@@ -8,7 +8,8 @@
   "scripts": {
     "build": "yarn clean && tsc --project tsconfig.json",
     "clean": "rm -rf dist/",
-    "lint": "tslint --format stylish --project . --exclude './node_modules/**/*.ts'",
+    "lint": "prettier --check src/*.ts",
+    "lint:fix": "prettier --write src/*.ts",
     "prepublish": "yarn build --outDir dist/",
     "test": "yarn build && mocha dist/**/*.test.js"
   },
@@ -31,7 +32,7 @@
     "ganache-core": "^2.7.0",
     "lodash": "^4.17.15",
     "mocha": "^6.2.0",
-    "prettier": "^1.18.2",
+    "prettier": "1.18.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
     "web3": "^1.2.1"

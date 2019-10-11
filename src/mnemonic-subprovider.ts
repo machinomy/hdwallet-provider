@@ -7,13 +7,13 @@ import * as Web3ProviderEngine from "web3-provider-engine";
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
 export class MnemonicSubprovider extends HookedWalletSubprovider {
-  private readonly keyring: HDKeyring
+  private readonly keyring: HDKeyring;
 
-  constructor (engine: Web3ProviderEngine, hdPath: string, mnemonic: string, numberOfAccounts?: number) {
+  constructor(engine: Web3ProviderEngine, hdPath: string, mnemonic: string, numberOfAccounts?: number) {
     const keyring = new HDKeyring({
       hdPath,
       mnemonic: mnemonic,
-      numberOfAccounts,
+      numberOfAccounts
     });
 
     const options = {
@@ -63,7 +63,7 @@ export class MnemonicSubprovider extends HookedWalletSubprovider {
       signTransaction: (txParams: any, callback: Callback<string>) => {
         engine.sendAsync(
           createPayload({
-            method: 'net_version',
+            method: "net_version"
           }),
           (err: any, result: any) => {
             if (err) {
@@ -74,17 +74,17 @@ export class MnemonicSubprovider extends HookedWalletSubprovider {
               keyring
                 .signTransaction(txParams.from, tx)
                 .then(signedTx => {
-                  const hexTx = '0x' + signedTx.serialize().toString('hex');
+                  const hexTx = "0x" + signedTx.serialize().toString("hex");
                   callback(null, hexTx);
                 })
                 .catch(e => {
                   callback(e);
                 });
             }
-          },
+          }
         );
-      },
-    }
+      }
+    };
     super(options);
     this.keyring = keyring;
   }

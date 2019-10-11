@@ -4,4 +4,3 @@ export interface IJsonRPCRequest {
   params: any[];
   id: number;
 }
-

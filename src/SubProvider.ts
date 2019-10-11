@@ -1,38 +1,38 @@
 import * as util from "./util";
-import ProviderEngine from 'web3-provider-engine';
+import ProviderEngine from "web3-provider-engine";
 
 export abstract class SubProvider {
-  engine?: ProviderEngine
-  currentBlock?: any
+  engine?: ProviderEngine;
+  currentBlock?: any;
 
-  setEngine (engine: ProviderEngine) {
+  setEngine(engine: ProviderEngine) {
     if (this.engine) {
-      return
+      return;
     }
-    this.engine = engine
-    engine.on('block', (block) => {
-      this.currentBlock = block
-    })
-    engine.on('start', () => {
-      this.start()
-    })
+    this.engine = engine;
+    engine.on("block", block => {
+      this.currentBlock = block;
+    });
+    engine.on("start", () => {
+      this.start();
+    });
 
-    engine.on('stop', () => {
-      this.stop()
-    })
+    engine.on("stop", () => {
+      this.stop();
+    });
   }
 
-  abstract handleRequest (payload: any, next: any, end: any): void
+  abstract handleRequest(payload: any, next: any, end: any): void;
 
-  emitPayload (payload: any, cb: any) {
-    this.engine!.sendAsync(util.createPayload(payload), cb)
+  emitPayload(payload: any, cb: any) {
+    this.engine!.sendAsync(util.createPayload(payload), cb);
   }
 
-  start () {
+  start() {
     // Noop
   }
 
-  stop () {
+  stop() {
     // Noop
   }
 }

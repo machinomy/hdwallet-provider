@@ -1,3 +1,3 @@
-import HDWalletProvider from './HDWalletProvider'
+import HDWalletProvider from "./HDWalletProvider";
 
-export default HDWalletProvider
+export default HDWalletProvider;
