@@ -47,8 +47,27 @@ export class HDWalletProvider implements Provider {
     require("babel-polyfill");
     const createLedgerSubprovider = (await import("@ledgerhq/web3-subprovider")).default;
     const TransportHid = (await import("@ledgerhq/hw-transport-node-hid")).default;
-    const transport = await TransportHid.create();
-    const getTransport = () => transport;
+    const getTransport = () => TransportHid.create();
+    const path = normalizePath(options.path);
+    const accountsLength = options.numberOfAccounts || 1;
+    const accountsOffset = options.accountsOffset || 0;
+    const ledgerSubprovider = createLedgerSubprovider(getTransport, {
+      path,
+      accountsLength,
+      askConfirm: options.askConfirm,
+      accountsOffset: accountsOffset
+    });
+    return new HDWalletProvider({
+      walletSubprovider: ledgerSubprovider,
+      rpc: options.rpc
+    });
+  }
+
+  static async ledgerBLE(options: LedgerOptions) {
+    require("babel-polyfill");
+    const createLedgerSubprovider = (await import("@ledgerhq/web3-subprovider")).default;
+    const TransportBLE = (await import("@ledgerhq/hw-transport-node-ble")).default;
+    const getTransport = () => TransportBLE.create();
     const path = normalizePath(options.path);
     const accountsLength = options.numberOfAccounts || 1;
     const accountsOffset = options.accountsOffset || 0;

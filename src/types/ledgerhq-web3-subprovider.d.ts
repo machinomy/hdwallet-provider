@@ -9,8 +9,12 @@ declare module "@ledgerhq/web3-subprovider" {
     accountsOffset?: number
   }
 
+  export type GetTransportFunctionSimple = () => Transport<A>
+  export type GetTransportFunctionPromise = () => Promise<Transport<A>>
+  export type GetTransportFunction = GetTransportFunctionPromise | GetTransportFunctionSimple
+
   export default function createLedgerSubprovider<A>(
-    getTransport: () => Transport<A>,
+    getTransport: GetTransportFunction,
     options?: SubproviderOptions
   ): HookedWalletSubprovider;
 }
