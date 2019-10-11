@@ -2,6 +2,7 @@ import HookedWalletSubprovider from "web3-provider-engine/subproviders/hooked-wa
 import HDKeyring from "eth-hd-keyring";
 import { createPayload } from "./util";
 import { Transaction } from "ethereumjs-tx";
+import { normalizePath } from "./path.util";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
@@ -10,7 +11,7 @@ export class MnemonicSubprovider extends HookedWalletSubprovider {
 
   constructor(hdPath: string | undefined, mnemonic: string, numberOfAccounts?: number) {
     const keyring = new HDKeyring({
-      hdPath,
+      hdPath: normalizePath(hdPath),
       mnemonic: mnemonic,
       numberOfAccounts
     });

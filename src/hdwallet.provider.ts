@@ -7,9 +7,7 @@ import ProviderEngine from "web3-provider-engine";
 import { MnemonicSubprovider } from "./mnemonic.subprovider";
 import { normalizePath } from "./path.util";
 import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
-import Transport from "@ledgerhq/hw-transport";
-import { GetTransportFunction } from "@ledgerhq/web3-subprovider";
-import createLedgerSubprovider from "./tmp";
+import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
@@ -33,19 +31,11 @@ export interface LedgerOptions {
   accountsOffset?: number;
 }
 
-export async function ledgerProvider<A>(
-  getTransport: GetTransportFunction,
+async function ledgerProvider<A>(
+  getTransport: GetTransportFunction<A>,
   options: LedgerOptions
 ): Promise<HDWalletProvider> {
-  const path = normalizePath(options.path);
-  const accountsLength = options.numberOfAccounts || 1;
-  const accountsOffset = options.accountsOffset || 0;
-  const walletSubprovider = createLedgerSubprovider(getTransport, {
-    path,
-    accountsLength,
-    askConfirm: options.askConfirm,
-    accountsOffset: accountsOffset
-  });
+  const walletSubprovider = new LedgerSubprovider(getTransport, options);
   return new HDWalletProvider({
     walletSubprovider,
     rpc: options.rpc
@@ -68,15 +58,15 @@ export class HDWalletProvider implements Provider {
   static async ledgerHID(options: LedgerOptions) {
     require("babel-polyfill");
     const TransportHid = (await import("@ledgerhq/hw-transport-node-hid")).default;
-    const getTransport = () => TransportHid.open("")
-    return ledgerProvider(getTransport, options)
+    const getTransport = () => TransportHid.open("");
+    return ledgerProvider(getTransport, options);
   }
 
   static async ledgerBLE(options: LedgerOptions) {
     require("babel-polyfill");
     const TransportBLE = (await import("@ledgerhq/hw-transport-node-ble")).default;
-    const getTransport = () => TransportBLE.create()
-    return ledgerProvider(getTransport, options)
+    const getTransport = () => TransportBLE.create();
+    return ledgerProvider(getTransport, options);
   }
 
   /**

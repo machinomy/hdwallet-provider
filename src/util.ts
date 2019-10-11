@@ -67,3 +67,8 @@ export function blockTagParamIndex(payload: any): number | undefined {
       return undefined;
   }
 }
+
+export function stripHexPrefix(str: string) {
+  const isHexPrefixed = str.slice(0, 2) === '0x';
+  return isHexPrefixed ? str.slice(2) : str;
+}
