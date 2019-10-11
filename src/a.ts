@@ -13,7 +13,7 @@ async function buildServer(): Promise<{ provider: HDWalletProvider; server: any 
   });
   return new Promise(resolve => {
     server.listen(PORT, async () => {
-      const provider = new HDWalletProvider({
+      const provider = HDWalletProvider.mnemonic({
         mnemonic: MNEMONIC,
         rpcUrl: `http://localhost:${PORT}`,
         numberOfAccounts: 2
@@ -24,7 +24,7 @@ async function buildServer(): Promise<{ provider: HDWalletProvider; server: any 
 }
 
 async function main() {
-  const provider = new HDWalletProvider({
+  const provider = HDWalletProvider.mnemonic({
     rpcUrl: "https://rinkeby.infura.io/v3/5cd2eb52bfce484995e6e5b422f0e7f1",
     mnemonic: "shoot lounge into embark method hedgehog omit crack stairs pyramid allow diagram",
     numberOfAccounts: 2

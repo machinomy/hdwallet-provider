@@ -11,6 +11,12 @@ import { MnemonicSubprovider } from "./mnemonic-subprovider";
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
 export interface Options {
+  keySubprovider: MnemonicSubprovider;
+  getAddresses: () => Promise<string[]>;
+  rpcUrl: string;
+}
+
+export interface MnemonicOptions {
   mnemonic: string;
   rpcUrl: string;
   hdPath?: string;
@@ -21,20 +27,29 @@ export default class HDWalletProvider implements Provider {
   readonly getAddresses: () => Promise<string[]>;
   public readonly engine: ProviderEngine;
 
-  /**
-   * Initialize HDWallet using some sort of provider.
-   */
-  constructor(options: Options) {
-    const engine = new ProviderEngine();
+  static mnemonic(options: MnemonicOptions): HDWalletProvider {
     const mnemonicSubprovider = new MnemonicSubprovider(options.hdPath, options.mnemonic, options.numberOfAccounts);
-    this.getAddresses = () => {
+    const getAddresses = () => {
       return new Promise<string[]>((resolve, reject) => {
         mnemonicSubprovider.getAccounts((error, accounts) => {
           error ? reject(error) : resolve(accounts);
         });
       });
     };
-    engine.addProvider(mnemonicSubprovider);
+    return new HDWalletProvider({
+      keySubprovider: mnemonicSubprovider,
+      getAddresses,
+      rpcUrl: options.rpcUrl
+    });
+  }
+
+  /**
+   * Initialize HDWallet using some sort of provider.
+   */
+  constructor(options: Options) {
+    const engine = new ProviderEngine();
+    this.getAddresses = options.getAddresses;
+    engine.addProvider(options.keySubprovider);
     engine.addProvider(new NonceSubProvider());
     engine.addProvider(new FiltersSubprovider());
     engine.addProvider(baseProvider(options.rpcUrl));

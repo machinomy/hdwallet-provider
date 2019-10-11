@@ -21,7 +21,7 @@ describe("HD Wallet Provider", () => {
       network_id: 4
     });
     server.listen(PORT, async () => {
-      provider = new HDWalletProvider({
+      provider = HDWalletProvider.mnemonic({
         mnemonic: MNEMONIC,
         rpcUrl: `http://localhost:${PORT}`,
         numberOfAccounts: 2
