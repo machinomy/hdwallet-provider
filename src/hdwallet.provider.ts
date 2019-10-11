@@ -50,11 +50,13 @@ export class HDWalletProvider implements Provider {
     const transport = await TransportHid.create();
     const getTransport = () => transport;
     const path = normalizePath(options.path);
+    const accountsLength = options.numberOfAccounts || 1;
+    const accountsOffset = options.accountsOffset || 0;
     const ledgerSubprovider = createLedgerSubprovider(getTransport, {
-      path: path,
-      accountsLength: options.numberOfAccounts,
+      path,
+      accountsLength,
       askConfirm: options.askConfirm,
-      accountsOffset: options.accountsOffset
+      accountsOffset: accountsOffset
     });
     return new HDWalletProvider({
       walletSubprovider: ledgerSubprovider,
@@ -70,7 +72,6 @@ export class HDWalletProvider implements Provider {
     this.getAddresses = () => {
       return new Promise<string[]>((resolve, reject) => {
         options.walletSubprovider.getAccounts((error, accounts) => {
-          console.log('wa', error, accounts)
           error ? reject(error) : resolve(accounts);
         });
       });
