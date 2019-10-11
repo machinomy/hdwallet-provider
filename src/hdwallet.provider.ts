@@ -70,6 +70,7 @@ export class HDWalletProvider implements Provider {
     this.getAddresses = () => {
       return new Promise<string[]>((resolve, reject) => {
         options.walletSubprovider.getAccounts((error, accounts) => {
+          console.log('wa', error, accounts)
           error ? reject(error) : resolve(accounts);
         });
       });
