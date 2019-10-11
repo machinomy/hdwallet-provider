@@ -23,7 +23,7 @@ describe("HD Wallet Provider", () => {
     server.listen(PORT, async () => {
       provider = HDWalletProvider.mnemonic({
         mnemonic: MNEMONIC,
-        rpcUrl: `http://localhost:${PORT}`,
+        rpc: `http://localhost:${PORT}`,
         numberOfAccounts: 2
       });
       second = (await provider.getAddresses())[1];

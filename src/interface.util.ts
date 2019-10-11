@@ -9,3 +9,10 @@ export interface IJsonRPCResponse {
   result?: any;
   error?: string | IRPCError;
 }
+
+export interface IJsonRPCRequest {
+  jsonrpc: string;
+  method: string;
+  params: any[];
+  id: number;
+}

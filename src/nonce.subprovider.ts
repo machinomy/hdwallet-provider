@@ -1,9 +1,9 @@
-import { SubProvider } from "./SubProvider";
+import { SubProvider } from "./subprovider";
 import { blockTagForPayload } from "./util";
 import * as ethUtil from "ethereumjs-util";
 import { Transaction } from "ethereumjs-tx";
 
-export class NonceSubProvider extends SubProvider {
+export class NonceSubprovider extends SubProvider {
   private nonceCache: Map<string, number> = new Map();
 
   updateNonce(address: string, nonce: number, cb: () => void) {
