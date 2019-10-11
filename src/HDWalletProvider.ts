@@ -11,8 +11,7 @@ import { MnemonicSubprovider } from "./mnemonic-subprovider";
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
 export interface Options {
-  keySubprovider: MnemonicSubprovider;
-  getAddresses: () => Promise<string[]>;
+  keySubprovider: HookedWalletSubprovider;
   rpcUrl: string;
 }
 
@@ -23,24 +22,39 @@ export interface MnemonicOptions {
   numberOfAccounts?: number;
 }
 
+export interface LedgerOptions {
+  numberOfAccounts?: number
+  rpcUrl: string;
+  path?: string
+}
+
 export default class HDWalletProvider implements Provider {
   readonly getAddresses: () => Promise<string[]>;
   public readonly engine: ProviderEngine;
 
   static mnemonic(options: MnemonicOptions): HDWalletProvider {
     const mnemonicSubprovider = new MnemonicSubprovider(options.hdPath, options.mnemonic, options.numberOfAccounts);
-    const getAddresses = () => {
-      return new Promise<string[]>((resolve, reject) => {
-        mnemonicSubprovider.getAccounts((error, accounts) => {
-          error ? reject(error) : resolve(accounts);
-        });
-      });
-    };
     return new HDWalletProvider({
       keySubprovider: mnemonicSubprovider,
-      getAddresses,
       rpcUrl: options.rpcUrl
     });
+  }
+
+  static async ledgerHID(options: LedgerOptions) {
+    require('babel-polyfill')
+    const createLedgerSubprovider = (await import('@ledgerhq/web3-subprovider')).default
+    const TransportHid = (await import("@ledgerhq/hw-transport-node-hid")).default
+    const transport = await TransportHid.create()
+    const getTransport = () => transport;
+    const path = options.path ? options.path.replace(/^m\//, '') : options.path
+    const ledgerSubprovider = createLedgerSubprovider(getTransport, {
+      accountsLength: options.numberOfAccounts,
+      path: path
+    });
+    return new HDWalletProvider({
+      keySubprovider: ledgerSubprovider,
+      rpcUrl: options.rpcUrl
+    })
   }
 
   /**
@@ -48,7 +62,13 @@ export default class HDWalletProvider implements Provider {
    */
   constructor(options: Options) {
     const engine = new ProviderEngine();
-    this.getAddresses = options.getAddresses;
+    this.getAddresses = () => {
+      return new Promise<string[]>((resolve, reject) => {
+        options.keySubprovider.getAccounts((error, accounts) => {
+          error ? reject(error) : resolve(accounts);
+        });
+      });
+    };
     engine.addProvider(options.keySubprovider);
     engine.addProvider(new NonceSubProvider());
     engine.addProvider(new FiltersSubprovider());
