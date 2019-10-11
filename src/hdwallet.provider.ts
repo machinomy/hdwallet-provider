@@ -65,7 +65,7 @@ export class HDWalletProvider implements Provider {
   static async ledgerBLE(options: LedgerOptions) {
     require("babel-polyfill");
     const TransportBLE = (await import("./transport-ble")).TransportBle;
-    const getTransport = () => TransportBLE.create()
+    const getTransport = () => TransportBLE.create();
     return ledgerProvider(getTransport, options);
   }
 

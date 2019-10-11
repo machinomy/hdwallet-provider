@@ -67,7 +67,7 @@ export class LedgerSubprovider extends HookedWalletSubprovider {
     }
 
     async function signPersonalMessage(msgData: { from: string; data: string }) {
-      const addressToPath = await getAddressToPath()
+      const addressToPath = await getAddressToPath();
       const path = addressToPath.get(msgData.from.toLowerCase());
       if (!path) throw new Error(`address unknown '${msgData.from}'`);
       const transport = await getTransport();
@@ -86,7 +86,7 @@ export class LedgerSubprovider extends HookedWalletSubprovider {
     }
 
     async function signTransaction(txData: TxData & { from: string }) {
-      const addressToPath = await getAddressToPath()
+      const addressToPath = await getAddressToPath();
       const path = addressToPath.get(txData.from.toLowerCase());
       if (!path) throw new Error("address unknown '" + txData.from + "'");
       const transport = await getTransport();
