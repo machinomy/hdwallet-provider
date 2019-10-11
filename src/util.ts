@@ -20,7 +20,7 @@ export function createPayload(data: any) {
   return Object.assign(empty, data);
 }
 
-export function baseProvider(rpcUrl: string) {
+export function baseProvider(rpcUrl: string): FetchSubprovider {
   const protocol = rpcUrl.split(":")[0].toLowerCase();
   switch (protocol) {
     case "http":

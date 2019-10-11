@@ -8,12 +8,13 @@ import { MnemonicSubprovider } from "./mnemonic.subprovider";
 import { normalizePath } from "./path.util";
 import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
+import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
 export interface Options {
   walletSubprovider: HookedWalletSubprovider;
-  rpc: string;
+  remoteSubprovider: FetchSubprovider
 }
 
 export interface MnemonicOptions {
@@ -35,10 +36,12 @@ async function ledgerProvider<A>(
   getTransport: GetTransportFunction<A>,
   options: LedgerOptions
 ): Promise<HDWalletProvider> {
+  const remoteSubprovider = baseProvider(options.rpc)
+  console.log(remoteSubprovider)
   const walletSubprovider = new LedgerSubprovider(getTransport, options);
   return new HDWalletProvider({
     walletSubprovider,
-    rpc: options.rpc
+    remoteSubprovider
   });
 }
 
@@ -48,10 +51,11 @@ export class HDWalletProvider implements Provider {
 
   static mnemonic(options: MnemonicOptions): HDWalletProvider {
     const path = normalizePath(options.path);
+    const remoteSubprovider = baseProvider(options.rpc)
     const mnemonicSubprovider = new MnemonicSubprovider(path, options.mnemonic, options.numberOfAccounts);
     return new HDWalletProvider({
       walletSubprovider: mnemonicSubprovider,
-      rpc: options.rpc
+      remoteSubprovider
     });
   }
 
@@ -84,7 +88,7 @@ export class HDWalletProvider implements Provider {
     engine.addProvider(options.walletSubprovider);
     engine.addProvider(new NonceSubprovider());
     engine.addProvider(new FiltersSubprovider());
-    engine.addProvider(baseProvider(options.rpc));
+    engine.addProvider(options.remoteSubprovider);
     engine.start();
     this.engine = engine;
   }
