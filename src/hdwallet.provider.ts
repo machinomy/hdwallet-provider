@@ -31,20 +31,24 @@ export interface LedgerOptions {
   accountsOffset?: number;
 }
 
-export async function ledgerSubprovider<A>(
+export async function ledgerProvider<A>(
   transport: Transport<A>,
   options: LedgerOptions
-): Promise<HookedWalletSubprovider> {
+): Promise<HDWalletProvider> {
   const createLedgerSubprovider = (await import("@ledgerhq/web3-subprovider")).default;
   const getTransport = () => transport;
   const path = normalizePath(options.path);
   const accountsLength = options.numberOfAccounts || 1;
   const accountsOffset = options.accountsOffset || 0;
-  return createLedgerSubprovider(getTransport, {
+  const walletSubprovider = createLedgerSubprovider(getTransport, {
     path,
     accountsLength,
     askConfirm: options.askConfirm,
     accountsOffset: accountsOffset
+  });
+  return new HDWalletProvider({
+    walletSubprovider,
+    rpc: options.rpc
   });
 }
 
@@ -65,22 +69,14 @@ export class HDWalletProvider implements Provider {
     require("babel-polyfill");
     const TransportHid = (await import("@ledgerhq/hw-transport-node-hid")).default;
     const transport = await TransportHid.create()
-    const walletSubprovider = await ledgerSubprovider(transport, options)
-    return new HDWalletProvider({
-      walletSubprovider,
-      rpc: options.rpc
-    });
+    return ledgerProvider(transport, options)
   }
 
   static async ledgerBLE(options: LedgerOptions) {
     require("babel-polyfill");
     const TransportBLE = (await import("@ledgerhq/hw-transport-node-ble")).default;
     const transport = await TransportBLE.create()
-    const walletSubprovider = await ledgerSubprovider(transport, options)
-    return new HDWalletProvider({
-      walletSubprovider,
-      rpc: options.rpc
-    });
+    return ledgerProvider(transport, options)
   }
 
   /**
