@@ -69,6 +69,7 @@ declare module "web3-provider-engine/subproviders/hooked-wallet" {
     engine: Web3ProviderEngine
     constructor(opts?: HookedWalletSubprovider.Options)
     getAccounts (callback: HookedWalletSubprovider.Callback<string[]>): void
+    signMessage: Function1<MsgParams, HexString>
   }
 
   namespace HookedWalletSubprovider {

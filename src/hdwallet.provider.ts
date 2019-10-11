@@ -58,14 +58,14 @@ export class HDWalletProvider implements Provider {
   static async ledgerHID(options: LedgerOptions) {
     require("babel-polyfill");
     const TransportHid = (await import("@ledgerhq/hw-transport-node-hid")).default;
-    const getTransport = () => TransportHid.open("");
+    const getTransport = () => TransportHid.create();
     return ledgerProvider(getTransport, options);
   }
 
   static async ledgerBLE(options: LedgerOptions) {
     require("babel-polyfill");
-    const TransportBLE = (await import("@ledgerhq/hw-transport-node-ble")).default;
-    const getTransport = () => TransportBLE.create();
+    const TransportBLE = (await import("./transport-ble")).TransportBle;
+    const getTransport = () => TransportBLE.create()
     return ledgerProvider(getTransport, options);
   }
 
