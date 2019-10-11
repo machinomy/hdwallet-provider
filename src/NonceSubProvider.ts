@@ -10,7 +10,6 @@ export class NonceSubProvider extends SubProvider {
     const cached = this.nonceCache.get(address)
     const isNewerNonce = (typeof cached === 'number') && nonce > cached
     if (!cached || isNewerNonce) {
-      console.log(`NONCE: for address ${address}: before=${cached}, after=${nonce}`)
       this.nonceCache.set(address, nonce)
     }
     cb()
