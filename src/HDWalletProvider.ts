@@ -17,8 +17,6 @@ export interface Options {
   numberOfAccounts?: number;
 }
 
-const DEFAULT_HD_PATH = "m/44'/60'/0'/0";
-
 export default class HDWalletProvider implements Provider {
   readonly getAddresses: () => Promise<string[]>;
   public readonly engine: ProviderEngine;
@@ -27,11 +25,8 @@ export default class HDWalletProvider implements Provider {
    * Initialize HDWallet using some sort of provider.
    */
   constructor(options: Options) {
-    const hdPath = options.hdPath || DEFAULT_HD_PATH;
-    const numberOfAccounts = options.numberOfAccounts || 1;
-
     const engine = new ProviderEngine();
-    const mnemonicSubprovider = new MnemonicSubprovider(engine, hdPath, options.mnemonic, numberOfAccounts);
+    const mnemonicSubprovider = new MnemonicSubprovider(options.hdPath, options.mnemonic, options.numberOfAccounts);
     this.getAddresses = () => {
       return new Promise<string[]>((resolve, reject) => {
         mnemonicSubprovider.getAccounts((error, accounts) => {

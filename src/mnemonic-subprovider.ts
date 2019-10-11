@@ -2,14 +2,13 @@ import HookedWalletSubprovider from "web3-provider-engine/subproviders/hooked-wa
 import HDKeyring from "eth-hd-keyring";
 import { createPayload } from "./util";
 import { Transaction } from "ethereumjs-tx";
-import * as Web3ProviderEngine from "web3-provider-engine";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
 export class MnemonicSubprovider extends HookedWalletSubprovider {
   private readonly keyring: HDKeyring;
 
-  constructor(engine: Web3ProviderEngine, hdPath: string, mnemonic: string, numberOfAccounts?: number) {
+  constructor(hdPath: string | undefined, mnemonic: string, numberOfAccounts?: number) {
     const keyring = new HDKeyring({
       hdPath,
       mnemonic: mnemonic,
@@ -61,7 +60,7 @@ export class MnemonicSubprovider extends HookedWalletSubprovider {
           });
       },
       signTransaction: (txParams: any, callback: Callback<string>) => {
-        engine.sendAsync(
+        this.engine.sendAsync(
           createPayload({
             method: "net_version"
           }),
