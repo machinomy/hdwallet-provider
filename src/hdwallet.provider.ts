@@ -8,6 +8,8 @@ import { MnemonicSubprovider } from "./mnemonic.subprovider";
 import { normalizePath } from "./path.util";
 import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
 import Transport from "@ledgerhq/hw-transport";
+import { GetTransportFunction } from "@ledgerhq/web3-subprovider";
+import createLedgerSubprovider from "./tmp";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
@@ -32,11 +34,9 @@ export interface LedgerOptions {
 }
 
 export async function ledgerProvider<A>(
-  transport: Transport<A>,
+  getTransport: GetTransportFunction,
   options: LedgerOptions
 ): Promise<HDWalletProvider> {
-  const createLedgerSubprovider = (await import("@ledgerhq/web3-subprovider")).default;
-  const getTransport = () => transport;
   const path = normalizePath(options.path);
   const accountsLength = options.numberOfAccounts || 1;
   const accountsOffset = options.accountsOffset || 0;
@@ -68,15 +68,15 @@ export class HDWalletProvider implements Provider {
   static async ledgerHID(options: LedgerOptions) {
     require("babel-polyfill");
     const TransportHid = (await import("@ledgerhq/hw-transport-node-hid")).default;
-    const transport = await TransportHid.create()
-    return ledgerProvider(transport, options)
+    const getTransport = () => TransportHid.open("")
+    return ledgerProvider(getTransport, options)
   }
 
   static async ledgerBLE(options: LedgerOptions) {
     require("babel-polyfill");
     const TransportBLE = (await import("@ledgerhq/hw-transport-node-ble")).default;
-    const transport = await TransportBLE.create()
-    return ledgerProvider(transport, options)
+    const getTransport = () => TransportBLE.create()
+    return ledgerProvider(getTransport, options)
   }
 
   /**
