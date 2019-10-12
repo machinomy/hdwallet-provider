@@ -2,16 +2,14 @@ import HookedWalletSubprovider from "web3-provider-engine/subproviders/hooked-wa
 import Transport from "@ledgerhq/hw-transport";
 import { componentsFromPath, DEFAULT_PATH, normalizePath } from "./path.util";
 import AppEth from "@ledgerhq/hw-app-eth";
-import { stripHexPrefix } from "./util";
-import { Transaction as EthereumTx, TxData } from "ethereumjs-tx";
+import { createPayload, stripHexPrefix } from "./util";
+import { Transaction, TxData } from "ethereumjs-tx";
 
 export type GetTransportFunctionSimple<A> = () => Transport<A>;
 export type GetTransportFunctionPromise<A> = () => Promise<Transport<A>>;
 export type GetTransportFunction<A> = GetTransportFunctionPromise<A> | GetTransportFunctionSimple<A>;
 
 export interface SubproviderOptions {
-  // refer to https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
-  networkId?: number;
   // derivation path
   path?: string;
   // should use actively validate on the device
@@ -26,7 +24,6 @@ export class InvalidNetworkIdError extends Error {}
 
 export class LedgerSubprovider extends HookedWalletSubprovider {
   constructor(getTransport: GetTransportFunction<any>, options: SubproviderOptions) {
-    const networkId = options.networkId || 1;
     const path = normalizePath(options.path || DEFAULT_PATH);
     const askConfirm = options.askConfirm || false;
     const accountsLength = options.accountsLength || 1;
@@ -85,14 +82,14 @@ export class LedgerSubprovider extends HookedWalletSubprovider {
       }
     }
 
-    async function signTransaction(txData: TxData & { from: string }) {
+    async function signTransaction(networkId: number, txData: TxData & { from: string }) {
       const addressToPath = await getAddressToPath();
       const path = addressToPath.get(txData.from.toLowerCase());
       if (!path) throw new Error("address unknown '" + txData.from + "'");
       const transport = await getTransport();
       try {
         const eth = new AppEth(transport);
-        const tx = new EthereumTx(txData);
+        const tx = new Transaction(txData, { chain: networkId, hardfork: 'spuriousDragon' });
 
         // Set the EIP155 bits
         tx.raw[6] = Buffer.from([networkId]); // v
@@ -139,9 +136,16 @@ export class LedgerSubprovider extends HookedWalletSubprovider {
           .catch(err => callback(err, undefined));
       },
       signTransaction: (txData, callback) => {
-        signTransaction(txData)
-          .then(res => callback(null, res))
-          .catch(err => callback(err, undefined));
+        this.engine.sendAsync(createPayload({ method: "net_version" }), (err: any, result: any) => {
+          if (err) {
+            return callback(err);
+          } else {
+            const networkId = Number(result.result);
+            signTransaction(networkId, txData)
+              .then(res => callback(null, res))
+              .catch(err => callback(err, undefined));
+          }
+        });
       }
     });
   }
