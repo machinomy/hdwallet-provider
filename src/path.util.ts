@@ -3,11 +3,8 @@ const ALLOWED_PATHS = ["44'/0'", "44'/1'", "44'/60'", "44'/61'"];
 export const DEFAULT_PATH = "m/44'/60'/0'/0";
 
 export function normalizePath(path?: string): string {
-  if (path) {
-    return path.replace(/^m\//, "");
-  } else {
-    return DEFAULT_PATH;
-  }
+  const usedPath = path || DEFAULT_PATH;
+  return usedPath.replace(/^m\//, "");
 }
 
 export class InvalidDerivationPathError extends Error {}
