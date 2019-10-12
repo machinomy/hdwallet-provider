@@ -1,5 +1,5 @@
 import { SubProvider } from "./subprovider";
-import { blockTagForPayload } from "./util";
+import { blockTagForPayload, createPayload } from "./util";
 import * as ethUtil from "ethereumjs-util";
 import { Transaction } from "ethereumjs-tx";
 
@@ -41,24 +41,32 @@ export class NonceSubprovider extends SubProvider {
         return;
 
       case "eth_sendRawTransaction":
-        // allow the request to continue normally
-        next((err: any, result: any, cb: any) => {
-          // only update local nonce if tx was submitted correctly
-          if (err) return cb();
-          // parse raw tx
-          const rawTx = ethUtil.toBuffer(payload.params[0]);
-          const tx = new Transaction(rawTx);
-          // extract address
-          const address = ethUtil.bufferToHex(tx.getSenderAddress());
-          // extract nonce and increment
-          let nonce = ethUtil.bufferToInt(tx.nonce);
-          nonce++;
-          // dont update our record on the nonce until the submit was successful
-          // update cache
-          this.updateNonce(address, nonce, () => {
-            cb();
-          });
-        });
+        if (!this.engine) throw new Error('Should have set engine')
+        this.engine.sendAsync(createPayload({ method: "net_version" }), (err: any, result: any) => {
+          if (err) {
+            end(err)
+          } else {
+            const networkId = Number(result.result);
+            // allow the request to continue normally
+            next((err: any, result: any, cb: any) => {
+              // only update local nonce if tx was submitted correctly
+              if (err) return cb();
+              // parse raw tx
+              const rawTx = ethUtil.toBuffer(payload.params[0]);
+              const tx = new Transaction(rawTx, { chain: networkId, hardfork: 'spuriousDragon' });
+              // extract address
+              const address = ethUtil.bufferToHex(tx.getSenderAddress());
+              // extract nonce and increment
+              let nonce = ethUtil.bufferToInt(tx.nonce);
+              nonce++;
+              // dont update our record on the nonce until the submit was successful
+              // update cache
+              this.updateNonce(address, nonce, () => {
+                cb();
+              });
+            });
+          }
+        })
         return;
 
       // Clear cache on a testrpc revert
