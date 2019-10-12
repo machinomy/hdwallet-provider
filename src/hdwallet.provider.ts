@@ -12,11 +12,6 @@ import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
-export interface Options {
-  walletSubprovider: HookedWalletSubprovider;
-  remoteSubprovider: FetchSubprovider
-}
-
 export interface MnemonicOptions {
   mnemonic: string;
   rpc: string;
@@ -26,23 +21,19 @@ export interface MnemonicOptions {
 
 export interface LedgerOptions {
   rpc: string;
-  numberOfAccounts?: number;
   path?: string;
-  askConfirm?: boolean;
+  numberOfAccounts?: number;
   accountsOffset?: number;
+  askConfirm?: boolean;
 }
 
 async function ledgerProvider<A>(
   getTransport: GetTransportFunction<A>,
   options: LedgerOptions
 ): Promise<HDWalletProvider> {
-  const remoteSubprovider = baseProvider(options.rpc)
-  console.log(remoteSubprovider)
-  const walletSubprovider = new LedgerSubprovider(getTransport, options);
-  return new HDWalletProvider({
-    walletSubprovider,
-    remoteSubprovider
-  });
+  const remote = baseProvider(options.rpc);
+  const signer = new LedgerSubprovider(getTransport, options);
+  return new HDWalletProvider(signer, remote);
 }
 
 export class HDWalletProvider implements Provider {
@@ -51,12 +42,9 @@ export class HDWalletProvider implements Provider {
 
   static mnemonic(options: MnemonicOptions): HDWalletProvider {
     const path = normalizePath(options.path);
-    const remoteSubprovider = baseProvider(options.rpc)
-    const mnemonicSubprovider = new MnemonicSubprovider(path, options.mnemonic, options.numberOfAccounts);
-    return new HDWalletProvider({
-      walletSubprovider: mnemonicSubprovider,
-      remoteSubprovider
-    });
+    const remote = baseProvider(options.rpc);
+    const signer = new MnemonicSubprovider(path, options.mnemonic, options.numberOfAccounts);
+    return new HDWalletProvider(signer, remote);
   }
 
   static async ledgerHID(options: LedgerOptions) {
@@ -76,19 +64,19 @@ export class HDWalletProvider implements Provider {
   /**
    * Initialize HDWallet using some sort of provider.
    */
-  constructor(options: Options) {
+  constructor(signer: HookedWalletSubprovider, remote: FetchSubprovider) {
     const engine = new ProviderEngine();
     this.getAddresses = () => {
       return new Promise<string[]>((resolve, reject) => {
-        options.walletSubprovider.getAccounts((error, accounts) => {
+        signer.getAccounts((error, accounts) => {
           error ? reject(error) : resolve(accounts);
         });
       });
     };
-    engine.addProvider(options.walletSubprovider);
+    engine.addProvider(signer);
     engine.addProvider(new NonceSubprovider());
     engine.addProvider(new FiltersSubprovider());
-    engine.addProvider(options.remoteSubprovider);
+    engine.addProvider(remote);
     engine.start();
     this.engine = engine;
   }
