@@ -13,7 +13,7 @@ export class MnemonicSubprovider extends HookedWalletSubprovider {
     const keyring = new HDKeyring({
       hdPath: normalizePath(hdPath),
       mnemonic: mnemonic,
-      numberOfAccounts
+      numberOfAccounts: numberOfAccounts || 1
     });
 
     const options = {
