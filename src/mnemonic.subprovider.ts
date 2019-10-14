@@ -1,7 +1,6 @@
 import HookedWalletSubprovider from "web3-provider-engine/subproviders/hooked-wallet";
 import HDKeyring from "eth-hd-keyring";
 import { createPayload } from "./util";
-import { normalizePath } from "./path.util";
 import { buildTransaction } from "./util/transaction.util";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
@@ -9,9 +8,9 @@ type Callback<A> = HookedWalletSubprovider.Callback<A>;
 export class MnemonicSubprovider extends HookedWalletSubprovider {
   private readonly keyring: HDKeyring;
 
-  constructor(hdPath: string | undefined, mnemonic: string, numberOfAccounts?: number) {
+  constructor(hdPath: string, mnemonic: string, numberOfAccounts?: number) {
     const keyring = new HDKeyring({
-      hdPath: normalizePath(hdPath),
+      hdPath: hdPath,
       mnemonic: mnemonic,
       numberOfAccounts: numberOfAccounts || 1
     });

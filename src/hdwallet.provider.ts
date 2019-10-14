@@ -5,7 +5,7 @@ import { baseProvider } from "./util";
 import { NonceSubprovider } from "./nonce.subprovider";
 import ProviderEngine from "web3-provider-engine";
 import { MnemonicSubprovider } from "./mnemonic.subprovider";
-import { normalizePath } from "./path.util";
+import { DEFAULT_PATH, normalizePath } from "./path.util";
 import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
@@ -41,7 +41,7 @@ export class HDWalletProvider implements Provider {
   public readonly engine: ProviderEngine;
 
   static mnemonic(options: MnemonicOptions): HDWalletProvider {
-    const path = normalizePath(options.path);
+    const path = options.path || DEFAULT_PATH;
     const remote = baseProvider(options.rpc);
     const signer = new MnemonicSubprovider(path, options.mnemonic, options.numberOfAccounts);
     return new HDWalletProvider(signer, remote);
