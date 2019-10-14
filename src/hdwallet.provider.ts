@@ -5,7 +5,7 @@ import { baseProvider } from "./util";
 import { NonceSubprovider } from "./nonce.subprovider";
 import ProviderEngine from "web3-provider-engine";
 import { MnemonicSubprovider } from "./mnemonic.subprovider";
-import { DEFAULT_PATH, normalizePath } from "./path.util";
+import { DEFAULT_PATH } from "./path.util";
 import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
