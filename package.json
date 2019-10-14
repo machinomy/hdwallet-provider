@@ -38,7 +38,7 @@
     "@types/mocha": "^5.2.7",
     "@types/web3": "^1.0.19",
     "bignumber.js": "^9.0.0",
-    "ganache-core": "^2.7.0",
+    "ganache-core": "^2.8.0",
     "lodash": "^4.17.15",
     "mocha": "^6.2.0",
     "prettier": "1.18.2",
