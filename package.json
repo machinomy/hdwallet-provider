@@ -1,8 +1,16 @@
 {
   "name": "@machinomy/hdwallet-provider",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "HD Wallet-enabled Web3 provider",
-  "keywords": ["ledger", "ledger nano x", "ethereum", "hardware", "provider", "wallet", "ledger"],
+  "keywords": [
+    "ledger",
+    "ledger nano x",
+    "ethereum",
+    "hardware",
+    "provider",
+    "wallet",
+    "ledger"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
