@@ -1,7 +1,7 @@
 import { SubProvider } from "./subprovider";
 import { blockTagForPayload, createPayload } from "./util";
 import * as ethUtil from "ethereumjs-util";
-import { Transaction } from "ethereumjs-tx";
+import { buildTransaction } from "./util/transaction.util";
 
 export class NonceSubprovider extends SubProvider {
   private nonceCache: Map<string, number> = new Map();
@@ -53,7 +53,7 @@ export class NonceSubprovider extends SubProvider {
               if (err) return cb();
               // parse raw tx
               const rawTx = ethUtil.toBuffer(payload.params[0]);
-              const tx = new Transaction(rawTx, { chain: networkId, hardfork: 'spuriousDragon' });
+              const tx = buildTransaction(rawTx, networkId)
               // extract address
               const address = ethUtil.bufferToHex(tx.getSenderAddress());
               // extract nonce and increment

@@ -3,7 +3,8 @@ import Transport from "@ledgerhq/hw-transport";
 import { componentsFromPath, DEFAULT_PATH, normalizePath } from "./path.util";
 import AppEth from "@ledgerhq/hw-app-eth";
 import { createPayload, stripHexPrefix } from "./util";
-import { Transaction, TxData } from "ethereumjs-tx";
+import { TxData } from "ethereumjs-tx";
+import { buildTransaction } from "./util/transaction.util";
 
 export type GetTransportFunctionSimple<A> = () => Transport<A>;
 export type GetTransportFunctionPromise<A> = () => Promise<Transport<A>>;
@@ -89,7 +90,7 @@ export class LedgerSubprovider extends HookedWalletSubprovider {
       const transport = await getTransport();
       try {
         const eth = new AppEth(transport);
-        const tx = new Transaction(txData, { chain: networkId, hardfork: 'spuriousDragon' });
+        const tx = buildTransaction(txData, networkId)
 
         // Set the EIP155 bits
         tx.raw[6] = Buffer.from([networkId]); // v

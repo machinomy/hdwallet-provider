@@ -1,8 +1,8 @@
 import HookedWalletSubprovider from "web3-provider-engine/subproviders/hooked-wallet";
 import HDKeyring from "eth-hd-keyring";
 import { createPayload } from "./util";
-import { Transaction } from "ethereumjs-tx";
 import { normalizePath } from "./path.util";
+import { buildTransaction } from "./util/transaction.util";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
@@ -69,8 +69,8 @@ export class MnemonicSubprovider extends HookedWalletSubprovider {
             if (err) {
               return callback(err);
             } else {
-              const chainId = Number(result.result);
-              const tx = new Transaction(txParams, { chain: chainId });
+              const networkId = Number(result.result);
+              const tx = buildTransaction(txParams, networkId)
               keyring
                 .signTransaction(txParams.from, tx)
                 .then(signedTx => {
