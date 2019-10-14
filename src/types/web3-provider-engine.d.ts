@@ -63,9 +63,12 @@ declare module "web3-provider-engine/subproviders/filters" {
 declare module "web3-provider-engine/subproviders/hooked-wallet" {
   import * as Web3 from 'web3'
   import * as Transaction from 'ethereumjs-tx'
+  import * as Web3ProviderEngine from "web3-provider-engine";
 
   class HookedWalletSubprovider {
+    engine: Web3ProviderEngine
     constructor(opts?: HookedWalletSubprovider.Options)
+    getAccounts (callback: HookedWalletSubprovider.Callback<string[]>): void
   }
 
   namespace HookedWalletSubprovider {

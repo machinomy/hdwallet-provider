@@ -8,7 +8,8 @@
   "scripts": {
     "build": "yarn clean && tsc --project tsconfig.json",
     "clean": "rm -rf dist/",
-    "lint": "tslint --format stylish --project . --exclude './node_modules/**/*.ts'",
+    "lint": "prettier --check src/*.ts",
+    "lint:fix": "prettier --write src/*.ts",
     "prepublish": "yarn build --outDir dist/",
     "test": "yarn build && mocha dist/**/*.test.js"
   },
@@ -16,13 +17,22 @@
     "dist/"
   ],
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "bip39": "^3.0.2",
     "eth-hd-keyring": "^2.0.0",
-    "ethereumjs-tx": "^2.1.0",
+    "ethereumjs-tx": "^2.1.1",
     "ethereumjs-util": "^6.1.0",
     "web3-provider-engine": "^13.8.0"
   },
+  "peerDependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^4.72.1",
+    "@ledgerhq/hw-transport-node-ble": "^4.72.1",
+    "@ledgerhq/web3-subprovider": "^4.72.1"
+  },
   "devDependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^4.72.1",
+    "@ledgerhq/hw-transport-node-ble": "^4.72.1",
+    "@ledgerhq/web3-subprovider": "^4.72.1",
     "@types/bip39": "^2.4.2",
     "@types/lodash": "^4.14.138",
     "@types/mocha": "^5.2.7",
@@ -31,7 +41,7 @@
     "ganache-core": "^2.7.0",
     "lodash": "^4.17.15",
     "mocha": "^6.2.0",
-    "prettier": "^1.18.2",
+    "prettier": "1.18.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
     "web3": "^1.2.1"
