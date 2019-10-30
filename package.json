@@ -31,7 +31,7 @@
     "eth-hd-keyring": "^3.4.0",
     "ethereumjs-tx": "^2.1.1",
     "ethereumjs-util": "^6.1.0",
-    "web3-provider-engine": "^13.8.0"
+    "web3-provider-engine": "^15.0.4"
   },
   "peerDependencies": {
     "@ledgerhq/hw-transport-node-ble": "^4.73.4",
