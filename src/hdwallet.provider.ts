@@ -1,5 +1,9 @@
 import FiltersSubprovider from "web3-provider-engine/subproviders/filters";
 import HookedWalletSubprovider from "web3-provider-engine/subproviders/hooked-wallet";
+import SanitizingSubprovider from "web3-provider-engine/subproviders/sanitizer";
+import CacheSubprovider from "web3-provider-engine/subproviders/cache";
+import SubscriptionSubprovider from "web3-provider-engine/subproviders/subscriptions";
+import InflightCacheSubprovider from "web3-provider-engine/subproviders/inflight-cache";
 import { Provider } from "web3/providers";
 import { baseProvider, Remote } from "./util";
 import { NonceSubprovider } from "./nonce.subprovider";
@@ -8,6 +12,7 @@ import { MnemonicSubprovider } from "./mnemonic.subprovider";
 import { DEFAULT_PATH } from "./path.util";
 import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
+import FetchSubprovider = require("web3-provider-engine/subproviders/fetch");
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
@@ -74,7 +79,13 @@ export class HDWalletProvider implements Provider {
     };
     engine.addProvider(signer);
     engine.addProvider(new NonceSubprovider());
-    engine.addProvider(new FiltersSubprovider());
+    engine.addProvider(new SanitizingSubprovider())
+    engine.addProvider(new CacheSubprovider())
+    if (remote instanceof FetchSubprovider) {
+      engine.addProvider(new SubscriptionSubprovider())
+      engine.addProvider(new FiltersSubprovider());
+    }
+    engine.addProvider(new InflightCacheSubprovider())
     engine.addProvider(remote);
     engine.start();
     this.engine = engine;

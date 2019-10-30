@@ -60,6 +60,54 @@ declare module "web3-provider-engine/subproviders/filters" {
   export = FiltersSubprovider
 }
 
+declare module "web3-provider-engine/subproviders/sanitizer" {
+  class SanitizingSubprovider {
+
+  }
+
+  namespace SanitizingSubprovider {
+
+  }
+
+  export = SanitizingSubprovider
+}
+
+declare module "web3-provider-engine/subproviders/cache" {
+  class BlockCacheSubprovider {
+
+  }
+
+  namespace BlockCacheSubprovider {
+
+  }
+
+  export = BlockCacheSubprovider
+}
+
+declare module "web3-provider-engine/subproviders/subscriptions" {
+  class SubscriptionSubprovider {
+
+  }
+
+  namespace SubscriptionSubprovider {
+
+  }
+
+  export = SubscriptionSubprovider
+}
+
+declare module "web3-provider-engine/subproviders/inflight-cache" {
+  class InflightCacheSubprovider {
+
+  }
+
+  namespace InflightCacheSubprovider {
+
+  }
+
+  export = InflightCacheSubprovider
+}
+
 declare module "web3-provider-engine/subproviders/hooked-wallet" {
   import * as Web3 from 'web3'
   import * as Transaction from 'ethereumjs-tx'
