@@ -7,12 +7,11 @@ import BigNumber from "bignumber.js";
 const MNEMONIC = "toy junior around syrup kiwi vast echo joke cross vote animal soup";
 const PORT = 8646;
 
-const web3 = new Web3();
-
 describe("HD Wallet Provider", () => {
   let server: any;
   let provider: HDWalletProvider;
   let second: string;
+  let web3: Web3
 
   before(done => {
     server = Ganache.server({
@@ -27,7 +26,7 @@ describe("HD Wallet Provider", () => {
         numberOfAccounts: 2
       });
       second = (await provider.getAddresses())[1];
-      web3.setProvider(provider);
+      web3 = new Web3(provider);
       done();
     });
   });

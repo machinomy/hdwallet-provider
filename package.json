@@ -34,14 +34,14 @@
     "web3-provider-engine": "^13.8.0"
   },
   "peerDependencies": {
-    "@ledgerhq/hw-transport-node-ble": "^4.72.1",
-    "@ledgerhq/hw-transport-node-hid": "^4.72.1",
-    "@ledgerhq/web3-subprovider": "^4.72.1"
+    "@ledgerhq/hw-transport-node-ble": "^4.73.4",
+    "@ledgerhq/hw-transport-node-hid": "^4.73.4",
+    "@ledgerhq/web3-subprovider": "^4.73.4"
   },
   "devDependencies": {
-    "@ledgerhq/hw-transport-node-ble": "^4.72.1",
-    "@ledgerhq/hw-transport-node-hid": "^4.72.1",
-    "@ledgerhq/web3-subprovider": "^4.72.1",
+    "@ledgerhq/hw-transport-node-ble": "^4.73.4",
+    "@ledgerhq/hw-transport-node-hid": "^4.73.4",
+    "@ledgerhq/web3-subprovider": "^4.73.4",
     "@types/bip39": "^2.4.2",
     "@types/lodash": "^4.14.138",
     "@types/mocha": "^5.2.7",
@@ -53,6 +53,6 @@
     "prettier": "1.18.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
-    "web3": "^1.2.1"
+    "web3": "1.2.1"
   }
 }
