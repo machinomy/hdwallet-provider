@@ -1,14 +1,13 @@
 import FiltersSubprovider from "web3-provider-engine/subproviders/filters";
 import HookedWalletSubprovider from "web3-provider-engine/subproviders/hooked-wallet";
 import { Provider } from "web3/providers";
-import { baseProvider } from "./util";
+import { baseProvider, Remote } from "./util";
 import { NonceSubprovider } from "./nonce.subprovider";
 import ProviderEngine from "web3-provider-engine";
 import { MnemonicSubprovider } from "./mnemonic.subprovider";
 import { DEFAULT_PATH } from "./path.util";
 import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
-import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
 
 type Callback<A> = HookedWalletSubprovider.Callback<A>;
 
@@ -64,7 +63,7 @@ export class HDWalletProvider implements Provider {
   /**
    * Initialize HDWallet using some sort of provider.
    */
-  constructor(signer: HookedWalletSubprovider, remote: FetchSubprovider) {
+  constructor(signer: HookedWalletSubprovider, remote: Remote) {
     const engine = new ProviderEngine();
     this.getAddresses = () => {
       return new Promise<string[]>((resolve, reject) => {

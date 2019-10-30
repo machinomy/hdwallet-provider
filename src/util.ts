@@ -1,4 +1,6 @@
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
+import WebSocketSubprovider from "web3-provider-engine/subproviders/websocket";
+import WebsocketSubprovider from "web3-provider-engine/subproviders/websocket";
 
 const EXTRA_DIGITS = 3;
 
@@ -20,7 +22,9 @@ export function createPayload(data: any) {
   return Object.assign(empty, data);
 }
 
-export function baseProvider(rpcUrl: string): FetchSubprovider {
+export type Remote = FetchSubprovider | WebsocketSubprovider
+
+export function baseProvider(rpcUrl: string): Remote {
   const protocol = rpcUrl.split(":")[0].toLowerCase();
   switch (protocol) {
     case "http":
@@ -28,9 +32,9 @@ export function baseProvider(rpcUrl: string): FetchSubprovider {
     case "https":
       return new FetchSubprovider({ rpcUrl });
     case "ws":
-      throw new Error(`ProviderEngine - unrecognized protocol in "${rpcUrl}"`);
+      return new WebSocketSubprovider({ rpcUrl });
     case "wss":
-      throw new Error(`ProviderEngine - unrecognized protocol in "${rpcUrl}"`);
+      return new WebSocketSubprovider({ rpcUrl });
     default:
       throw new Error(`ProviderEngine - unrecognized protocol in "${rpcUrl}"`);
   }
