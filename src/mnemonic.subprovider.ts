@@ -69,7 +69,7 @@ export class MnemonicSubprovider extends HookedWalletSubprovider {
               return callback(err);
             } else {
               const networkId = Number(result.result);
-              const tx = buildTransaction(txParams, networkId)
+              const tx = buildTransaction(txParams, networkId);
               keyring
                 .signTransaction(txParams.from, tx)
                 .then(signedTx => {

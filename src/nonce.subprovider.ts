@@ -41,10 +41,10 @@ export class NonceSubprovider extends SubProvider {
         return;
 
       case "eth_sendRawTransaction":
-        if (!this.engine) throw new Error('Should have set engine')
+        if (!this.engine) throw new Error("Should have set engine");
         this.engine.sendAsync(createPayload({ method: "net_version" }), (err: any, result: any) => {
           if (err) {
-            end(err)
+            end(err);
           } else {
             const networkId = Number(result.result);
             // allow the request to continue normally
@@ -53,7 +53,7 @@ export class NonceSubprovider extends SubProvider {
               if (err) return cb();
               // parse raw tx
               const rawTx = ethUtil.toBuffer(payload.params[0]);
-              const tx = buildTransaction(rawTx, networkId)
+              const tx = buildTransaction(rawTx, networkId);
               // extract address
               const address = ethUtil.bufferToHex(tx.getSenderAddress());
               // extract nonce and increment
@@ -66,7 +66,7 @@ export class NonceSubprovider extends SubProvider {
               });
             });
           }
-        })
+        });
         return;
 
       // Clear cache on a testrpc revert

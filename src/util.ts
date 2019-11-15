@@ -22,7 +22,7 @@ export function createPayload(data: any) {
   return Object.assign(empty, data);
 }
 
-export type Remote = FetchSubprovider | WebsocketSubprovider
+export type Remote = FetchSubprovider | WebsocketSubprovider;
 
 export function baseProvider(rpcUrl: string): Remote {
   const protocol = rpcUrl.split(":")[0].toLowerCase();

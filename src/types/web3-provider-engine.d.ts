@@ -5,10 +5,9 @@ declare module "web3-provider-engine" {
     type Callback<A> = (err: Error|null|undefined, result?: A) => void
 
     export interface Options {
-      mnemonic: string,
-      rpcUrl: string,
-      hdPath?: string,
-      numberOfAccounts?: number
+      blockTrackerProvider?: any
+      blockTracker?: any
+      pollingInterval?: number
     }
 
     interface JsonRPCRequest {

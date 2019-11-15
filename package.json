@@ -50,6 +50,7 @@
     "@types/web3": "^1.0.19",
     "bignumber.js": "^9.0.0",
     "ganache-core": "^2.8.0",
+    "jest": "^24.9.0",
     "lodash": "^4.17.15",
     "mocha": "^6.2.2",
     "prettier": "1.18.2",

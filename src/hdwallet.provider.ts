@@ -4,17 +4,15 @@ import SanitizingSubprovider from "web3-provider-engine/subproviders/sanitizer";
 import CacheSubprovider from "web3-provider-engine/subproviders/cache";
 import SubscriptionSubprovider from "web3-provider-engine/subproviders/subscriptions";
 import InflightCacheSubprovider from "web3-provider-engine/subproviders/inflight-cache";
-import { Provider } from "web3/providers";
 import { baseProvider, Remote } from "./util";
 import { NonceSubprovider } from "./nonce.subprovider";
 import ProviderEngine from "web3-provider-engine";
 import { MnemonicSubprovider } from "./mnemonic.subprovider";
 import { DEFAULT_PATH } from "./path.util";
-import { IJsonRPCRequest, IJsonRPCResponse } from "./interface.util";
+import { Callback, IJsonRPCRequest, IJsonRPCResponse, Provider } from "./interface.util";
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
 import FetchSubprovider = require("web3-provider-engine/subproviders/fetch");
-
-type Callback<A> = HookedWalletSubprovider.Callback<A>;
+import { PollingBlockTracker } from "./block-tracker/polling";
 
 export interface MnemonicOptions {
   mnemonic: string;
@@ -69,7 +67,14 @@ export class HDWalletProvider implements Provider {
    * Initialize HDWallet using some sort of provider.
    */
   constructor(signer: HookedWalletSubprovider, remote: Remote) {
-    const engine = new ProviderEngine();
+    const blockTracker = new PollingBlockTracker({
+      provider: this,
+      pollingInterval: 4000,
+      setSkipCacheFlag: true
+    });
+    const engine = new ProviderEngine({
+      blockTracker
+    });
     this.getAddresses = () => {
       return new Promise<string[]>((resolve, reject) => {
         signer.getAccounts((error, accounts) => {
@@ -79,16 +84,16 @@ export class HDWalletProvider implements Provider {
     };
     engine.addProvider(signer);
     engine.addProvider(new NonceSubprovider());
-    engine.addProvider(new SanitizingSubprovider())
-    engine.addProvider(new CacheSubprovider())
+    engine.addProvider(new SanitizingSubprovider());
+    engine.addProvider(new CacheSubprovider());
     if (remote instanceof FetchSubprovider) {
-      engine.addProvider(new SubscriptionSubprovider())
+      engine.addProvider(new SubscriptionSubprovider());
       engine.addProvider(new FiltersSubprovider());
     }
-    engine.addProvider(new InflightCacheSubprovider())
+    engine.addProvider(new InflightCacheSubprovider());
     engine.addProvider(remote);
-    engine.start();
     this.engine = engine;
+    engine.start();
   }
 
   send(payload: IJsonRPCRequest, callback: Callback<IJsonRPCResponse>): void {

@@ -90,7 +90,7 @@ export class LedgerSubprovider extends HookedWalletSubprovider {
       const transport = await getTransport();
       try {
         const eth = new AppEth(transport);
-        const tx = buildTransaction(txData, networkId)
+        const tx = buildTransaction(txData, networkId);
 
         // Set the EIP155 bits
         tx.raw[6] = Buffer.from([networkId]); // v
