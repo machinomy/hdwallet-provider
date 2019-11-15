@@ -76,3 +76,13 @@ export function stripHexPrefix(str: string) {
   const isHexPrefixed = str.slice(0, 2) === "0x";
   return isHexPrefixed ? str.slice(2) : str;
 }
+
+export function timeout(duration: number, unref?: boolean) {
+  return new Promise(resolve => {
+    const timoutRef = setTimeout(resolve, duration);
+    // don't keep process open
+    if (timoutRef.unref && unref) {
+      timoutRef.unref();
+    }
+  });
+}

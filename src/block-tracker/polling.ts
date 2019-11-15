@@ -1,5 +1,6 @@
 import { BaseBlockTracker, Block, SECOND } from "./base";
 import { Provider } from "../interface.util";
+import { timeout } from "../util";
 
 export interface Options {
   provider: Provider;
@@ -90,14 +91,4 @@ export class PollingBlockTracker extends BaseBlockTracker {
     if (res.error) throw new Error(`PollingBlockTracker - encountered error fetching block:\n${res.error}`);
     return res.result;
   }
-}
-
-function timeout(duration: number, unref: boolean) {
-  return new Promise(resolve => {
-    const timoutRef = setTimeout(resolve, duration);
-    // don't keep process open
-    if (timoutRef.unref && unref) {
-      timoutRef.unref();
-    }
-  });
 }

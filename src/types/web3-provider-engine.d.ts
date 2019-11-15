@@ -31,6 +31,8 @@ declare module "web3-provider-engine" {
     sendAsync(payload: Web3ProviderEngine.JsonRPCRequest, callback: Web3ProviderEngine.Callback<Web3ProviderEngine.JsonRPCResponse>): void;
     start(): void;
     stop(): void;
+    _handleAsync(req: any, cb: (err: any, res?: any) => void): void
+    _getBlockByNumber(blockNumber: string | number, callback: (error: any, result?: any) => void): void
   }
 
   export = Web3ProviderEngine

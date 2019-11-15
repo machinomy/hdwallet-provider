@@ -13,6 +13,7 @@ import { Callback, IJsonRPCRequest, IJsonRPCResponse, Provider } from "./interfa
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
 import FetchSubprovider = require("web3-provider-engine/subproviders/fetch");
 import { PollingBlockTracker } from "./block-tracker/polling";
+import { Engine } from "./engine";
 
 export interface MnemonicOptions {
   mnemonic: string;
@@ -72,7 +73,7 @@ export class HDWalletProvider implements Provider {
       pollingInterval: 4000,
       setSkipCacheFlag: true
     });
-    const engine = new ProviderEngine({
+    const engine = new Engine({
       blockTracker
     });
     this.getAddresses = () => {
