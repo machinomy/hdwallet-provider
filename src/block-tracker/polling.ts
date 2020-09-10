@@ -1,9 +1,10 @@
 import { BaseBlockTracker, Block, SECOND } from "./base";
-import { Provider } from "../interface.util";
+import {AbstractProvider} from 'web3-core'
+
 import { timeout } from "../util";
 
 export interface Options {
-  provider: Provider;
+  provider: AbstractProvider;
   pollingInterval?: number;
   retryTimeout?: number;
   keepEventLoopActive?: boolean;
@@ -11,7 +12,7 @@ export interface Options {
 }
 
 export class PollingBlockTracker extends BaseBlockTracker {
-  private readonly _provider: Provider;
+  private readonly _provider: AbstractProvider;
   private readonly _pollingInterval: number;
   private readonly _retryTimeout: number;
   private readonly _keepEventLoopActive: boolean;

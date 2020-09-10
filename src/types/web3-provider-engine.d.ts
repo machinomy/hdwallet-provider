@@ -2,7 +2,7 @@ declare module "web3-provider-engine" {
   import EventEmitter from 'events'
 
   namespace Web3ProviderEngine {
-    type Callback<A> = (err: Error|null|undefined, result?: A) => void
+    type Callback<A> = (err: Error|null, result?: A) => void
 
     export interface Options {
       blockTrackerProvider?: any

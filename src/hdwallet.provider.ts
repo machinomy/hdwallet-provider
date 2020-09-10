@@ -9,11 +9,11 @@ import { NonceSubprovider } from "./nonce.subprovider";
 import ProviderEngine from "web3-provider-engine";
 import { MnemonicSubprovider } from "./mnemonic.subprovider";
 import { DEFAULT_PATH } from "./path.util";
-import { Callback, IJsonRPCRequest, IJsonRPCResponse, Provider } from "./interface.util";
 import { GetTransportFunction, LedgerSubprovider } from "./ledger.subprovider";
 import FetchSubprovider = require("web3-provider-engine/subproviders/fetch");
 import { PollingBlockTracker } from "./block-tracker/polling";
 import { Engine } from "./engine";
+import {AbstractProvider} from 'web3-core'
 
 export interface MnemonicOptions {
   mnemonic: string;
@@ -39,7 +39,7 @@ async function ledgerProvider<A>(
   return new HDWalletProvider(signer, remote);
 }
 
-export class HDWalletProvider implements Provider {
+export class HDWalletProvider implements AbstractProvider {
   readonly getAddresses: () => Promise<string[]>;
   public readonly engine: ProviderEngine;
 
@@ -97,11 +97,11 @@ export class HDWalletProvider implements Provider {
     engine.start();
   }
 
-  send(payload: IJsonRPCRequest, callback: Callback<IJsonRPCResponse>): void {
+  send(payload: ProviderEngine.JsonRPCRequest, callback: ProviderEngine.Callback<ProviderEngine.JsonRPCResponse>): void {
     this.engine.sendAsync(payload, callback);
   }
 
-  sendAsync(payload: IJsonRPCRequest, callback: Callback<IJsonRPCResponse>): void {
+  sendAsync(payload: ProviderEngine.JsonRPCRequest, callback: ProviderEngine.Callback<ProviderEngine.JsonRPCResponse>): void {
     this.engine.sendAsync(payload, callback);
   }
 }
