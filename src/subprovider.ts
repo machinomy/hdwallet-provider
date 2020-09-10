@@ -1,5 +1,6 @@
 import * as util from "./util";
 import ProviderEngine from "web3-provider-engine";
+import type { EventEmitter } from "events";
 
 export abstract class SubProvider {
   engine?: ProviderEngine;
@@ -10,14 +11,15 @@ export abstract class SubProvider {
       return;
     }
     this.engine = engine;
-    engine.on("block", block => {
+    const asEventEmitter = engine as unknown as EventEmitter
+    asEventEmitter.on("block", block => {
       this.currentBlock = block;
     });
-    engine.on("start", () => {
+    asEventEmitter.on("start", () => {
       this.start();
     });
 
-    engine.on("stop", () => {
+    asEventEmitter.on("stop", () => {
       this.stop();
     });
   }
